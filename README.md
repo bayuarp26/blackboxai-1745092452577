@@ -35,9 +35,27 @@ This is a simple Node.js Express application that generates a tracking link whic
 
 6. Use the interface to generate tracking links and view visitor data.
 
+## Deploying to Vercel
+
+1. Ensure you have a Vercel account and the Vercel CLI installed.
+
+2. The project is configured for Vercel deployment with the following:
+
+   - `api/index.js` contains the Express app adapted for Vercel serverless functions.
+   - `vercel.json` configures the build and routing.
+
+3. To deploy:
+
+   ```bash
+   vercel login
+   vercel
+   ```
+
+4. After deployment, your app will be accessible online via the Vercel URL.
+
 ## Notes
 
-- Ensure you have Node.js installed on your system.
+- Ensure you have Node.js installed on your system for local development.
 - The project uses the `geolocation` npm package for IP-based geolocation.
 - The tracking link redirects to an external URL after requesting GPS access.
 
