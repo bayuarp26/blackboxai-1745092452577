@@ -1,90 +1,80 @@
+# Tracking Link Generator
 
-Built by https://www.blackbox.ai
+This is a simple Node.js Express application that generates a tracking link which requests visitor GPS location access before redirecting to an external URL.
 
----
+## Features
 
-# Geolocation Tracker
+- Generates a tracking link that requests GPS access immediately on load.
+- Stores visitor IP addresses and geolocation data.
+- Displays visitor IPs and locations on the main page.
+- Uses browser Geolocation API and IP-based geolocation.
 
-## Project Overview
-The Geolocation Tracker is a Node.js application that uses Express to serve a simple web application for tracking visitor IP addresses and their geolocations. The application stores visitor IPs and their corresponding geographical locations in memory, allowing users to access and visualize this data via API endpoints.
+## Running the Project Offline in VSCode
 
-## Installation
-To get started with the Geolocation Tracker, follow these steps:
+1. Clone the repository or download the project files.
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/<your-username>/geolocation-tracker.git
-   cd geolocation-tracker
-   ```
+2. Open the project folder in VSCode.
 
-2. Install the dependencies using npm:
+3. Open a terminal in VSCode and run:
+
    ```bash
    npm install
    ```
 
-3. Start the server:
+4. Start the server:
+
    ```bash
    node server.js
    ```
 
-4. Access the application by navigating to `http://localhost:8000` in your web browser.
+5. Open your browser and navigate to:
 
-## Usage
-After you start the server, you can use the following endpoints:
+   ```
+   http://localhost:8000
+   ```
 
-- **Access Tracking Page**: Navigate to `/trackpage` to see the tracking page that requests geolocation.
-- **Track Visitors**: When a visitor accesses the main tracking endpoint (`/track`), their IP address will be tracked, and they will be redirected to the specified TikTok URL.
-- **Get Visitor IPs**: Access `/ips` to fetch a list of unique visitor IP addresses.
-- **Get Visitor Locations**: Access `/locations` to retrieve a list of stored visitor locations.
-- **Submit Location Data**: Send a POST request to `/location` with a JSON body containing latitude and longitude to store visitor locations:
-  ```json
-  {
-    "latitude": 12.34,
-    "longitude": 56.78
-  }
-  ```
+6. Use the interface to generate tracking links and view visitor data.
 
-## Features
-- Track visitor IP addresses and geographic locations.
-- Redirect users to a specified URL while logging their IPs.
-- API endpoints to retrieve tracked IPs and locations.
-- Simple web interface for geolocation tracking.
+## Notes
 
-## Dependencies
-The following major dependencies are included in the project:
+- Ensure you have Node.js installed on your system.
+- The project uses the `geolocation` npm package for IP-based geolocation.
+- The tracking link redirects to an external URL after requesting GPS access.
 
-- **Express**: A fast, unopinionated, minimalist web framework for Node.js.
-- **Geolocation**: A library to look up geolocations based on IP addresses.
+## GitHub Repository
 
-You can check additional dependencies in `package.json` and `package-lock.json` files.
+To publish this project to GitHub:
 
-```json
-{
-  "dependencies": {
-    "express": "^5.1.0",
-    "geolocation": "^0.2.0"
-  }
-}
-```
+1. Initialize git in the project folder (if not already):
 
-## Project Structure
-The directory structure of the project is simple:
+   ```bash
+   git init
+   ```
 
-```
-geolocation-tracker/
-├── package.json
-├── package-lock.json
-└── server.js
-└── public/
-    └── trackpage.html  # The HTML file for the tracking page
-```
+2. Add all files:
 
-- `server.js` - The main server file that sets up routes and middleware.
-- `public/` - Contains static files such as the HTML tracking page.
+   ```bash
+   git add .
+   ```
 
-## License
-This project is licensed under the MIT License - see the LICENSE file for details.
+3. Commit the files:
 
----
+   ```bash
+   git commit -m "Initial commit"
+   ```
 
-Feel free to reach out for any questions or contributions! Happy coding!
+4. Create a new repository on GitHub.
+
+5. Add the remote repository URL:
+
+   ```bash
+   git remote add origin https://github.com/yourusername/your-repo-name.git
+   ```
+
+6. Push the code:
+
+   ```bash
+   git push -u origin main
+   ```
+
+Replace `yourusername` and `your-repo-name` with your GitHub username and repository name.
