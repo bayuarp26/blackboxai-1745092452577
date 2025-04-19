@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tracking Link Generator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+  />
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col items-center justify-center p-4">
+  <div class="bg-white rounded-lg shadow-lg p-8 max-w-md w-full">
+    <h1 class="text-2xl font-bold mb-4 text-center">Tracking Link Generator</h1>
+    <p class="mb-6 text-center text-gray-700">
+      Click the button below to generate your tracking link.
+    </p>
+    <button
+      id="generateBtn"
+      class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition"
+    >
+      Generate Tracking Link
+    </button>
+    <div id="linkContainer" class="mt-6 hidden">
+      <label for="trackingLink" class="block mb-2 font-medium text-gray-800"
+        >Your Tracking Link:</label
+      >
+      <input
+        type="text"
+        id="trackingLink"
+        readonly
+        class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+      <button
+        id="copyBtn"
+        class="mt-3 w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded transition"
+      >
+        <i class="fas fa-copy mr-2"></i>Copy to Clipboard
+      </button>
+      <p id="copyMsg" class="text-green-600 mt-2 hidden">Copied!</p>
+    </div>
+    <div id="geoContainer" class="mt-6 hidden">
+      <p class="font-medium text-gray-800">Your Location:</p>
+      <p id="geoStatus" class="text-gray-700"></p>
+      <p id="geoCoords" class="text-gray-700"></p>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-lg shadow-lg p-8 max-w-md w-full mt-8">
+    <h2 class="text-xl font-bold mb-4 text-center">Visitor IP Addresses</h2>
+    <ul id="ipList" class="list-disc list-inside text-gray-700 max-h-48 overflow-y-auto"></ul>
+    <button
+      id="refreshIPsBtn"
+      class="mt-4 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded transition"
+    >
+      Refresh IP List
+    </button>
+  </div>
+
+  <div class="bg-white rounded-lg shadow-lg p-8 max-w-md w-full mt-8">
+    <h2 class="text-xl font-bold mb-4 text-center">Visitor Locations</h2>
+    <ul id="locationList" class="list-disc list-inside text-gray-700 max-h-48 overflow-y-auto"></ul>
+    <button
+      id="refreshLocationsBtn"
+      class="mt-4 w-full bg-teal-600 hover:bg-teal-700 text-white font-semibold py-2 px-4 rounded transition"
+    >
+      Refresh Location List
+    </button>
+  </div>
+
+  <script>
+    const generateBtn = document.getElementById('generateBtn');
+    const linkContainer = document.getElementById('linkContainer');
+    const trackingLinkInput = document.getElementById('trackingLink');
+    const copyBtn = document.getElementById('copyBtn');
+    const copyMsg = document.getElementById('copyMsg');
+    const ipList = document.getElementById('ipList');
+    const refreshIPsBtn = document.getElementById('refreshIPsBtn');
+
+    const geoContainer = document.getElementById('geoContainer');
+    const geoStatus = document.getElementById('geoStatus');
+    const geoCoords = document.getElementById('geoCoords');
+    const locationList = document.getElementById('locationList');
+    const refreshLocationsBtn = document.getElementById('refreshLocationsBtn');
+
+    generateBtn.addEventListener('click', () => {
+      const trackingLink = window.location.origin + '/trackpage';
+      trackingLinkInput.value = trackingLink;
+      linkContainer.classList.remove('hidden');
+      copyMsg.classList.add('hidden');
+    });
+
+    copyBtn.addEventListener('click', () => {
+      trackingLinkInput.select();
+      trackingLinkInput.setSelectionRange(0, 99999); // For mobile devices
+      document.execCommand('copy');
+      copyMsg.classList.remove('hidden');
+      setTimeout(() => {
+        copyMsg.classList.add('hidden');
+      }, 2000);
+    });
+
+    async function fetchIPs() {
+      try {
+        const response = await fetch('/ips');
+        const ips = await response.json();
+        ipList.innerHTML = '';
+        if (ips.length === 0) {
+          ipList.innerHTML = '<li>No IPs recorded yet.</li>';
+        } else {
+          ips.forEach(ip => {
+            const li = document.createElement('li');
+            li.textContent = ip;
+            ipList.appendChild(li);
+          });
+        }
+      } catch (error) {
+        ipList.innerHTML = '<li>Error fetching IPs.</li>';
+      }
+    }
+
+    refreshIPsBtn.addEventListener('click', fetchIPs);
+
+    // Fetch IPs on page load
+    fetchIPs();
+
+    async function fetchLocations() {
+      try {
+        const response = await fetch('/locations');
+        const locations = await response.json();
+        locationList.innerHTML = '';
+        if (locations.length === 0) {
+          locationList.innerHTML = '<li>No locations recorded yet.</li>';
+        } else {
+          locations.forEach(loc => {
+            const li = document.createElement('li');
+            li.textContent = `Lat: ${loc.latitude.toFixed(6)}, Lon: ${loc.longitude.toFixed(6)}`;
+            locationList.appendChild(li);
+          });
+        }
+      } catch (error) {
+        locationList.innerHTML = '<li>Error fetching locations.</li>';
+      }
+    }
+
+    refreshLocationsBtn.addEventListener('click', fetchLocations);
+
+    // Fetch locations on page load
+    fetchLocations();
+  </script>
+</body>
+</html>

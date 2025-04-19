@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tracking Page</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+  <div class="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center">
+    <h1 class="text-2xl font-bold mb-4">Tracking...</h1>
+    <p id="status" class="text-gray-700 mb-4">Requesting location access...</p>
+  </div>
+
+  <script>
+    const statusEl = document.getElementById('status');
+
+    function requestLocation() {
+      if (!navigator.geolocation) {
+        statusEl.textContent = 'Geolocation is not supported by your browser.';
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
+          statusEl.textContent = 'Location found. Redirecting...';
+
+          try {
+            await fetch('/location', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ latitude, longitude }),
+            });
+          } catch (error) {
+            console.error('Error sending location:', error);
+          }
+
+          window.location.href = '/track';
+        },
+        (error) => {
+          statusEl.textContent = 'Location access is required. Please allow location access to proceed.';
+          // Retry after 2 seconds
+          setTimeout(() => {
+            requestLocation();
+          }, 2000);
+        }
+      );
+    }
+
+    requestLocation();
+  </script>
+</body>
+</html>
